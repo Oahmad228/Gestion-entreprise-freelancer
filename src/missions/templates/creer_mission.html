@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Créer une mission{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10">
+    <h2 class="text-2xl font-bold mb-6">Créer une mission</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn-primary mt-4">Publier</button>
+    </form>
+</div>
+{% endblock %}

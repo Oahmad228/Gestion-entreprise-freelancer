@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Freelance Platform{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold text-blue-600">FreelancePlatform</a>
+            <nav>
+                {% if user.is_authenticated %}
+                    <button class="dropdown-btn">{{ user.username }}</button>
+                    <a href="{% url 'users:profile' %}" class="mr-4">Mon profil</a>
+                    <a href="{% url 'users:logout' %}" class="text-red-500">Déconnexion</a>
+                    <a href="{% url 'messagerie:liste' %}" class="relative mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        {% if unread_messages %}
+                            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'users:login' %}" class="mr-4">Connexion</a>
+                    <a href="{% url 'users:signup' %}" class="bg-blue-600 text-white px-4 py-2 rounded">Inscription</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                <div class="p-4 mb-4 rounded {% if message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white border-t mt-8 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-500">
+            &copy; 2023 FreelancePlatform. Tous droits réservés.
+        </div>
+    </footer>
+</body>
+</html>

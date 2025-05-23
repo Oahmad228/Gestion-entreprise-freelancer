@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center">
+        {% if object %}Modifier{% else %}Créer{% endif %} une mission
+    </h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Affichage des erreurs générales -->
+        {% if form.non_field_errors %}
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Champs du formulaire -->
+        <div class="space-y-4">
+            {% for field in form %}
+            <div>
+                <label class="block text-gray-700 mb-2" for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                </label>
+                
+                {{ field }}
+                
+                {% if field.help_text %}
+                <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+                {% endif %}
+                
+                {% if field.errors %}
+                <ul class="text-red-500 text-xs mt-1">
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-6 flex justify-between">
+            <a href="{% url 'missions:liste' %}" class="text-blue-600 hover:underline">
+                Retour à la liste
+            </a>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                {% if object %}Mettre à jour{% else %}Créer{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Script pour améliorer l'expérience date -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Transforme le champ date en datepicker si nécessaire
+    const dateField = document.getElementById('id_date_limite');
+    if (dateField) {
+        dateField.type = 'date';
+    }
+});
+</script>
+{% endblock %}

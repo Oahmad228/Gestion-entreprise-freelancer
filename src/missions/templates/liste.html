@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load mission_tags %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    {% if est_freelance %}
+        <h1 class="text-2xl font-bold mb-6">Missions disponibles</h1>
+    {% else %}
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Vos missions publiées</h1>
+            <a href="{% url 'missions:creer' %}" class="bg-blue-600 text-white px-4 py-2 rounded">Créer une mission</a>
+        </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for mission in missions %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                <div class="p-6">
+                    <!-- En-tête avec boutons d'action -->
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="text-xl font-bold">{{ mission.titre }}</h2>
+                        {% if not request.user.est_freelance %}
+                        <div class="flex space-x-2">
+                            <a href="{% url 'missions:editer' mission.pk %}"
+                               class="bg-yellow-500 text-white px-3 py-1 rounded text-sm">
+                                Éditer
+                            </a>
+                            <a href="{% url 'missions:supprimer_mission' mission.pk %}"
+                               class="bg-red-500 text-white px-3 py-1 rounded text-sm">
+                                Supprimer
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Corps de la carte -->
+                    <p class="text-gray-600 mb-4">{{ mission.description|truncatechars:200 }}</p>
+
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-blue-600">{{ mission.budget }} €</span>
+                        <span class="text-sm text-gray-500">
+                            {% if request.user.est_freelance %}
+                                Publiée par {{ mission.entreprise.entreprise_profile.nom_entreprise }}
+                            {% else %}
+                                {{ mission.candidatures.count }} candidature(s)
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Pied de carte avec lien détail -->
+                <div class="bg-gray-50 px-6 py-3">
+                    <a href="{% url 'missions:detail' mission.pk %}"
+                       class="text-blue-600 hover:underline">
+                        Voir les détails →
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-8">
+                <p class="text-gray-500">
+                    {% if request.user.est_freelance %}
+                        Aucune nouvelle mission disponible pour le moment.
+                    {% else %}
+                        Vous n'avez pas encore publié de mission.
+                    {% endif %}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

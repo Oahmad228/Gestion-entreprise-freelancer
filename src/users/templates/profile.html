@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-6">Mon Profil</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Section Informations de base -->
+        <div class="md:col-span-1">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-lg font-semibold mb-4">Informations Personnelles</h2>
+                <p class="mb-2"><span class="font-medium">Nom d'utilisateur:</span> {{ user.username }}</p>
+                <p class="mb-2"><span class="font-medium">Email:</span> {{ user.email }}</p>
+                <p class="mb-2">
+                    <span class="font-medium">Type:</span> 
+                    {% if user.est_freelance %}Freelance{% else %}Entreprise{% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Section Profil Spécifique -->
+        <div class="md:col-span-2">
+            {% if user.est_freelance and user.freelance_profile %}
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h2 class="text-lg font-semibold mb-4">Profil Freelance</h2>
+                <p class="mb-2"><span class="font-medium">Bio:</span> {{ user.freelance_profile.bio }}</p>
+                <p class="mb-2"><span class="font-medium">Compétences:</span> {{ user.freelance_profile.competences }}</p>
+                <p class="mb-2"><span class="font-medium">Tarif horaire:</span> {{ user.freelance_profile.tarif_horaire }} €</p>
+                <a href="{% url 'users:complete_profile' %}" class="text-blue-600 hover:underline">Modifier mon profil</a>
+            </div>
+            {% elif user.est_entreprise and user.entreprise_profile %}
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h2 class="text-lg font-semibold mb-4">Profil Entreprise</h2>
+                <p class="mb-2"><span class="font-medium">Nom:</span> {{ user.entreprise_profile.nom_entreprise }}</p>
+                <p class="mb-2"><span class="font-medium">Description:</span> {{ user.entreprise_profile.description }}</p>
+                <p class="mb-2"><span class="font-medium">Site web:</span> {{ user.entreprise_profile.site_web }}</p>
+                <a href="{% url 'users:complete_profile' %}" class="text-blue-600 hover:underline">Modifier mon profil</a>
+            </div>
+            {% else %}
+            <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+                <p class="text-yellow-800">Votre profil n'est pas complet.</p>
+                <a href="{% url 'users:complete_profile' %}" class="text-blue-600 hover:underline">Compléter mon profil</a>
+            </div>
+            {% endif %}
+
+            <!-- Section Statistiques -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-lg font-semibold mb-4">Statistiques</h2>
+                {% if user.est_freelance %}
+                    <p class="mb-2"><span class="font-medium">Missions postulées:</span> {{ user.candidatures_envoyees.count }}</p>
+                    <p class="mb-2"><span class="font-medium">Missions acceptées:</span> {{ user.candidatures_acceptees }}</p>
+                    <p class="mb-2"><span class="font-medium">En attente:</span> {{ user.candidatures_en_attente }}</p>
+                {% else %}
+                    <p class="mb-2"><span class="font-medium">Missions publiées:</span> {{ user.missions_publiees.count }}</p>
+                    <p class="mb-2"><span class="font-medium">Candidatures reçues:</span> {{ user.candidatures_recues.count }}</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+        <!-- Section Suppression-->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-lg font-semibold mb-4">Supprimer</h2>
+                <a href="{% url 'users:supprimer_compte' %}" class="text-red-600">Supprimer mon compte</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

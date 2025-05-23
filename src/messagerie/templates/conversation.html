@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex items-center mb-6">
+        <a href="{% url 'messagerie:liste' %}" class="mr-4 text-blue-600">← Retour</a>
+        <h1 class="text-2xl font-bold">{{ conversation.mission.titre }}</h1>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="p-4 border-b">
+            <h2 class="font-semibold">Avec : 
+                {% for participant in conversation.participants.all %}
+                    {% if participant != request.user %}
+                        {{ participant.username }}
+                    {% endif %}
+                {% endfor %}
+            </h2>
+        </div>
+        
+        <div class="p-4 space-y-4" style="max-height: 60vh; overflow-y: auto;">
+            {% for message in messages %}
+            <div class="flex {% if message.expediteur == request.user %}justify-end{% endif %}">
+                <div class="max-w-3/4 p-3 rounded-lg 
+                    {% if message.expediteur == request.user %}bg-blue-100{% else %}bg-gray-100{% endif %}">
+                    <p>{{ message.contenu }}</p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        {{ message.expediteur.username }} - {{ message.date_envoi|date:"d/m/Y H:i" }}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="p-4 border-t">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.contenu }}
+                <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Envoyer
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
