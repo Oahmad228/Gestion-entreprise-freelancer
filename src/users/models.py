@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinLengthValidator
 from django.utils.translation import gettext_lazy as _
+from django.apps import apps
 
 
 class Utilisateur(AbstractUser):
@@ -46,6 +47,14 @@ class Utilisateur(AbstractUser):
     @property
     def candidatures_acceptees(self):
         return self.candidatures_envoyees.filter(statut='acceptee').count()
+
+    @property
+    def message_recus(self):
+        Message = apps.get_model('messagerie', 'Message')
+        return Message.objects.filter(
+            conversation__participants=self,
+            expediteur__isnull=False
+        ).exclude(expediteur=self)
 
 
 class Freelance(models.Model):

@@ -66,6 +66,12 @@ class Mission(models.Model):
     def __str__(self):
         return f"{self.titre} - {self.entreprise.entreprise_profile.nom_entreprise}"
 
+    def get_participants(self):
+        """Retourne les participants autorisés pour cette mission"""
+        participants = {self.entreprise}
+        participants.update([candidature.freelance for candidature in self.candidatures.all()])
+        return participants
+
 
 class Candidature(models.Model):
     class StatutCandidature(models.TextChoices):

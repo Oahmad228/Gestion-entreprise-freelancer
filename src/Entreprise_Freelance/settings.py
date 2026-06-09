@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'missions',
-    'messagerie'
+    'users.apps.UsersConfig',
+    'missions.apps.MissionsConfig',
+    'messagerie.apps.MessagerieConfig',
 ]
 
 AUTH_USER_MODEL = 'users.Utilisateur'
@@ -81,14 +81,31 @@ WSGI_APPLICATION = 'Entreprise_Freelance.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import shutil
+
+db_path = BASE_DIR / 'db.sqlite3'
+
+# Workaround for Windows Controlled Folder Access (Ransomware Protection) blocking SQLite writes in Documents/OneDrive
+if os.name == 'nt' and DEBUG:
+    local_appdata = os.environ.get('LOCALAPPDATA')
+    if local_appdata:
+        writable_dir = Path(local_appdata) / 'EntrepriseFreelance'
+        try:
+            writable_dir.mkdir(parents=True, exist_ok=True)
+            target_db = writable_dir / 'db.sqlite3'
+            
+            # If the database doesn't exist in AppData yet, copy the current one from BASE_DIR
+            if not target_db.exists() and db_path.exists():
+                shutil.copy2(db_path, target_db)
+                
+            db_path = target_db
+        except Exception as e:
+            print(f"Warning: Could not configure writable SQLite database in AppData ({e}). Using default path.")
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Entre_Free',
-        'USER': 'gestion',
-        'PASSWORD': '12345678',
-        'HOST': '192.168.1.23',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': db_path,
     }
 }
 
@@ -133,3 +150,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'users:login'
+

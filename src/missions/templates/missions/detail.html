@@ -42,7 +42,7 @@
                 <div class="mt-8">
                     {% if a_postule %}
                         <p class="text-green-600 mb-4">Vous avez déjà postulé à cette mission</p>
-                        <a href="{% url 'missions:liste' %}"
+                        <a href="{% url 'missions:listes' %}"
                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                             Voir d'autres missions
                         </a>
@@ -60,7 +60,7 @@
                            class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
                             Modifier
                         </a>
-                        <a href="{% url 'missions:liste' %}"
+                        <a href="{% url 'missions:listes' %}"
                            class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
                             Retour à la liste
                         </a>

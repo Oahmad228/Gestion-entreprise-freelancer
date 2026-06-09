@@ -9,12 +9,12 @@
 <body class="bg-gray-50">
     <header class="bg-white shadow">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="/" class="text-xl font-bold text-blue-600">FreelancePlatform</a>
-            <nav>
+            <a href="{% url 'missions:listes' %}" class="text-xl font-bold text-blue-600">FreelancePlatform</a>
+            <nav class="flex items-center space-x-4">
                 {% if user.is_authenticated %}
-                    <button class="dropdown-btn">{{ user.username }}</button>
-                    <a href="{% url 'users:profile' %}" class="mr-4">Mon profil</a>
-                    <a href="{% url 'users:logout' %}" class="text-red-500">Déconnexion</a>
+                    <a href="{% url 'users:profile' %}" class="mr-4">
+                        {{ user.username }}
+                    </a>
                     <a href="{% url 'messagerie:liste' %}" class="relative mr-4">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -24,9 +24,12 @@
                             <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
                         {% endif %}
                     </a>
+                    <a href="{% url 'users:logout' %}" class="text-red-500 hover:text-red-700">Déconnexion</a>
                 {% else %}
-                    <a href="{% url 'users:login' %}" class="mr-4">Connexion</a>
-                    <a href="{% url 'users:signup' %}" class="bg-blue-600 text-white px-4 py-2 rounded">Inscription</a>
+                    <a href="{% url 'users:login' %}" class="mr-4 hover:text-blue-700">Connexion</a>
+                    <a href="{% url 'users:signup' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Inscription
+                    </a>
                 {% endif %}
             </nav>
         </div>
@@ -34,9 +37,9 @@
 
     <main class="container mx-auto px-4 py-8">
         {% if messages %}
-            <div class="mb-4">
+            <div class="mb-4 space-y-2">
                 {% for message in messages %}
-                <div class="p-4 mb-4 rounded {% if message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                <div class="p-4 rounded {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
                     {{ message }}
                 </div>
                 {% endfor %}

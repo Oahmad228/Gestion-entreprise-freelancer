@@ -8,8 +8,8 @@ class Conversation(models.Model):
     date_creation = models.DateTimeField(auto_now_add=True)
 
 class Message(models.Model):
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
-    expediteur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
+    conversation = models.ForeignKey('Conversation', on_delete=models.CASCADE)
+    expediteur = models.ForeignKey('users.Utilisateur', on_delete=models.CASCADE)
     contenu = models.TextField()
     date_envoi = models.DateTimeField(auto_now_add=True)
     lu = models.BooleanField(default=False)

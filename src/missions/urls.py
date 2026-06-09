@@ -5,7 +5,7 @@ from .views import MissionListView, MissionCreateView, MissionUpdateView, Missio
 app_name = 'missions'
 
 urlpatterns = [
-    path('', MissionListView.as_view(), name='liste'),
+    path('', MissionListView.as_view(), name='listes'),
     path('<int:mission_id>/postuler/', PostulerMissionView.as_view(), name='postuler'),
     path('creer/', MissionCreateView.as_view(), name='creer'),
     path('<int:pk>/editer/', MissionUpdateView.as_view(), name='editer'),

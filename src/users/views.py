@@ -14,7 +14,7 @@ class LoginView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('missions:home')
+            return redirect('missions:listes')
         return render(request, self.template_name)
 
     def post(self, request):
@@ -25,7 +25,7 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             messages.success(request, _("Connexion réussie !"))
-            return redirect('missions:liste')  # Redirection vers la liste des missions
+            return redirect('missions:listes')  # Redirection vers la liste des missions
         else:
             messages.error(request, _("Identifiants incorrects."))
             return render(request, self.template_name)
@@ -36,7 +36,7 @@ class SignupView(View):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('missions:home')
+            return redirect('missions:listes')
         return render(request, self.template_name)
 
     def post(self, request):
@@ -96,7 +96,7 @@ class SignupView(View):
 
             login(request, user)
             messages.success(request, _("Inscription réussie !"))
-            return redirect('missions:liste')  # Redirection vers la liste des missions
+            return redirect('missions:listes')  # Redirection vers la liste des missions
 
         except Exception as e:
             messages.error(request, _(f"Erreur lors de la création du compte: {str(e)}"))
